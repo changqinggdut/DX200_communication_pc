@@ -2,13 +2,17 @@
 /* Copyright 2009 YASKAWA ELECTRIC All Rights reserved. */
 
 #include "motoPlus.h"
+#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // for API & FUNCTIONS
 void moto_plus0_task(void);//子函数的声明
 void ap_TCP_Sserver(ULONG portNo);//子函数的声明
 #define PORT        11000 //端口号，
 #define BUFF_MAX    1023
+
+char* result[100];
 
 void moto_plus0_task(void)
 {
@@ -49,12 +53,13 @@ void ap_TCP_Sserver(ULONG portNo)
 
     while (1)
     {
-        int     acceptHandle;
+        int     acceptHandle;//接收到信息的的字节数
         struct  sockaddr_in     clientSockAddr;
         int     sizeofSockAddr;
 
         memset(&clientSockAddr, 0, sizeof(clientSockAddr));
         sizeofSockAddr = sizeof(clientSockAddr);
+        
 
         acceptHandle = mpAccept(sockHandle, (struct sockaddr *)&clientSockAddr, &sizeofSockAddr);//接收来自客户端的链接请求
 
@@ -68,6 +73,49 @@ void ap_TCP_Sserver(ULONG portNo)
             char    buff[BUFF_MAX + 1];
 
             memset(buff, 0, sizeof(buff));
+            buff[]="请确定开启机械臂：yes or no？"；
+            mpSend(acceptHandle,buff, bytesRecv, 0)；
+            
+            while(1)
+            {
+            	memset(buff, 0, sizeof(buff));
+            	bytesRecv = mpRecv(acceptHandle, buff, BUFF_MAX, 0);//从socket中提取字符
+            	if(bytesRecv > 0)
+            	{
+            		if (strncmp(buff, "yes", 3) == 0 || strncmp(buff, "YES", 3) == 0)
+              			{
+              	 			memset(buff, 0, sizeof(buff));
+              				buff[100]="请输入坐标"；
+              				bytesSend = mpSend(acceptHandle,buff, bytesRecv, 0);
+              				while(1)
+              				{
+              					memset(buff, 0, sizeof(buff));
+              					bytesRecv = mpRecv(acceptHandle, buff, BUFF_MAX, 0);//从socket中提取字符
+              					if(bytesRecv>0)
+              					{
+              						//进入一个子函数将坐标传给机器人,执行完任务之后返回最后一个，
+              					}
+              					
+              					if(bytesRecv=0);
+              					if(bytesRecv<0) break;
+	
+              				}
+             			 }
+             			 
+             	    if (strncmp(buff, "no", 2) == 0 || strncmp(buff, "NO", 2) == 0)
+              			{
+              	 			break;
+             			}
+
+            		
+            	}
+            	if(bytesRecv =0)
+            	{
+            		
+            	}
+            	else break;
+
+            }
 
             bytesRecv = mpRecv(acceptHandle, buff, BUFF_MAX, 0);//从socket中提取字符
             
@@ -81,8 +129,16 @@ void ap_TCP_Sserver(ULONG portNo)
             location(buff);
             bytesSend = mpSend(acceptHandle,buff, bytesRecv, 0);//向socket写入信息
 
+            if (strncmp(buff, "yes", 3) == 0 || strncmp(buff, "YES", 3) == 0)
+              {
+              	 memset(buff, 0, sizeof(buff));
+              	 buff[100]="请输入坐标"；
+              	 bytesSend = mpSend(acceptHandle,buff, bytesRecv, 0);
+              }
+              
             if (bytesSend != bytesRecv)
                 break;
+             
 
             if (strncmp(buff, "EXIT", 4) == 0 || strncmp(buff, "exit", 4) == 0)
                 break;
@@ -110,36 +166,51 @@ closeSockHandle:
 	}
     return (string);
 }*/
-char* location(char*string )
-{
-   /*
-	int a=0;
-	const char * split = ",";
-	char * p;
-	p = strtok (string,split);
-	int i=0;
-	while(p!=NULL) 
-	{
-	  string[i]= atoi(p);
-	  i++;
-	  p = strtok(NULL,split);
-	}
-	//getchar();
-	
-	*/
-	int		i;
-    int     len;
 
-    len = strlen(string);
-	for (i=0; i < len; i++)
-	{
-	   
-	    
-		    string[i] ='a';
-        
-	}
+char *location(char*string ){
+
+/****************将buff转成整形数组**************/
+int i=0;
+int b[3];
+char g[100];
+char * p;
+const char * split = ",";
+
+p = strtok (string,split);
+
+while(p!=NULL)
+{
+
+   b[i]= atoi(p);
+   printf ("%d\n",b[i]);
+   i++;
+   p = strtok(NULL,split);
+
+}
   
-	return (string);
+
+
+/****************将整形数组转成字符串**************/
+
+int L;
+sprintf(g,"");
+for (i=0;i<3;i++) 
+{
+	L = strlen(g);
+	if (i<2) 
+	   sprintf(g+L,"\%d\,,",b[i]);
+	else 
+	   sprintf(g+L,"\%d",b[i]);
+};
+/****************************************************/
+ int len;
+  len = strlen(g);
+  for (i=0; i < len; i++)
+  {
+  	string[i] = g[i];
+  }
+   
+return(string);
 }
 
 

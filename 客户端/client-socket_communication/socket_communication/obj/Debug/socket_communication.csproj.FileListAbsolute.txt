@@ -44,3 +44,6 @@ C:\Users\Administrator\Desktop\通信\client-socket_communication\socket_communi
 C:\Users\Administrator\Desktop\智龙\通信\client-socket_communication\socket_communication\bin\Debug\socket_communication.exe.config
 C:\Users\Administrator\Desktop\智龙\通信\client-socket_communication\socket_communication\obj\Debug\socket_communication.exe
 C:\Users\Administrator\Desktop\智龙\通信\client-socket_communication\socket_communication\obj\Debug\socket_communication.pdb
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\bin\Debug\socket_communication.exe.config
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\obj\Debug\socket_communication.exe
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\obj\Debug\socket_communication.pdb

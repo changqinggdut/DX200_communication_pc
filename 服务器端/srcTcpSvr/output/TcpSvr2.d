@@ -1,4 +1,5 @@
-C:\Users\Administrator\Desktop\TCP\srcTcpSvr\output\TcpSvr2.a:  \
+ \
+ C:\Users\Administrator\Desktop\DX200_communication_pc\·þÎñÆ÷¶Ë\srcTcpSvr\output\TcpSvr2.a:  \
  C:\Users\Administrator\AppData\Local\MotoPlusIDE_DN\ 0\TcpSvr2.c \
   D:\motoplus\mpbuilder\inc/motoPlus.h \
   D:\motoplus\mpbuilder\inc/mpParams.h \
@@ -26,7 +27,8 @@ C:\Users\Administrator\Desktop\TCP\srcTcpSvr\output\TcpSvr2.a:  \
   D:\motoplus\mpbuilder\inc/mpLegApi00.h \
   D:\motoplus\mpbuilder\inc/mpExFileCtrl.h \
   D:\motoplus\mpbuilder\inc/mpWatchDog.h \
-  D:\motoplus\mpbuilder\inc/mpKinema.h D:\motoplus\mpbuilder\inc/string.h
+  D:\motoplus\mpbuilder\inc/mpKinema.h D:\motoplus\mpbuilder\inc/stdio.h \
+  D:\motoplus\mpbuilder\inc/string.h D:\motoplus\mpbuilder\inc/stdlib.h
 
 D:\motoplus\mpbuilder\inc/motoPlus.h:
 
@@ -90,4 +92,8 @@ D:\motoplus\mpbuilder\inc/mpWatchDog.h:
 
 D:\motoplus\mpbuilder\inc/mpKinema.h:
 
+D:\motoplus\mpbuilder\inc/stdio.h:
+
 D:\motoplus\mpbuilder\inc/string.h:
+
+D:\motoplus\mpbuilder\inc/stdlib.h:
