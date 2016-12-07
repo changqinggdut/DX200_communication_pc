@@ -27,8 +27,8 @@ unsigned long serverAddr;
 
 int a;
 int c;
-int b[3];
-char g[100];
+int b[1000];
+char g[1000];
 
 
 void moto_plus0_task(void)
@@ -83,7 +83,7 @@ void ap_TCP_Sserver(ULONG portNo)
         if (acceptHandle < 0)
             break;
 
-        while( 1 )
+        while(1)
         {
             int     bytesRecv;
             int     bytesSend;
@@ -98,6 +98,7 @@ void ap_TCP_Sserver(ULONG portNo)
 
             /* 受信データを大文字に変換して送り返す */
             location(buff);
+            
             bytesSend = mpSend(acceptHandle, g, bytesRecv, 0);//向socket写入信息
 
             if (bytesSend != bytesRecv)
@@ -139,6 +140,7 @@ char *location(char*string ){
 
 /****************将buff转成整形数组**************/
 int i=0;
+int j;
 char * p;
 const char * split = ",";
 
@@ -152,21 +154,46 @@ while(p!=NULL)
    p = strtok(NULL,split);
 
 }
-   a=b[0]+b[1]+b[2];
-   printf ("%d\n",a);
+/****************将一维数组转成二维数组**************/
+
+int L=sizeof(b)/24;
+int d[L][6];
+int k=0;
+for(  i=0; i<L ; ++i )
+
+{
+
+  for( j=0 ; j<6 ; ++j )
+
+    {
+
+        d[i][j]=b[k];
+
+            k++;
+
+    }
+
+}
+int x[3]={d[0][0],d[1][0],d[2][0]};
 
 
 /****************将整形数组转成字符串**************/
 
-int L;
+int l;
 sprintf(g,"");
 for (i=0;i<3;i++) {
-L = strlen(g);
-if (i<2) sprintf(g+L,"\%d\,",b[i]);
-else sprintf(g+L,"\%d",b[i]);
+l = strlen(g);
+if (i<2) sprintf(g+L,"\%d\,",x[i]);
+else sprintf(g+L,"\%d",x[i]);
 };
 /****************************************************/
-
+ while(1)
+            {
+               printf("%s\n",g[0]);
+               printf("%s\n",g[1]);
+               printf("%s\n",g[2]);
+               
+            }
 return(g);
 }
 
