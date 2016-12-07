@@ -12,6 +12,18 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
+
+
+using Basler.Pylon;//引用basler相机官方给的函数库
+using Emgu;
+using Emgu.CV;
+using Emgu.Util;
+using Emgu.CV.Structure;
+using Emgu.CV.CvEnum;
+using System.Collections;
+
+
+
 namespace bo_communication_with_dx200
 {
     public partial class Form1 : Form
@@ -19,6 +31,10 @@ namespace bo_communication_with_dx200
          static byte[] result = new byte[1024];
          public string[,] EnterCoordination=new string[100,6];
          int NumofEnterCoordinationPoint=0;
+
+         IPAddress ip = IPAddress.Parse("192.168.255.1");
+         int port = 11000;
+         Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         public Form1()
         {
@@ -36,10 +52,6 @@ namespace bo_communication_with_dx200
        #region socket通信子程序
             private void SocketCommunicationInitialization()//socket 通信初始化
             {
-                  IPAddress ip = IPAddress.Parse("192.168.255.1");
-                  int port = 11000;
-            
-                Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             
                 try
                 {
@@ -70,8 +82,13 @@ namespace bo_communication_with_dx200
                 try
                 {
                     byte[] result = new byte[1024];
-                    int receiveLength = clientSocket.Receive(result);
-                    Console.WriteLine("接收服务器消息：{0}", Encoding.ASCII.GetString(result));
+                    int num=clientSocket.Receive(result);
+                    //Console.WriteLine("接收服务器消息：{0}", Encoding.ASCII.GetString(result));
+
+                    string RebackData=Encoding.ASCII.GetString(result);
+                    MessageBox.Show(RebackData);
+                    listBox2.Items.Add(RebackData);
+
                     // Encoding.ASCII.GetString(result,0,result.Length);
                 }
                 catch
@@ -194,10 +211,133 @@ namespace bo_communication_with_dx200
             private void button3_Click(object sender, EventArgs e)
             {
 
+                for (int i = 0; i < 10; i++)
+                {
+                    /* code */
+                    MessageBox.Show(i.ToString());
+                }
+
+
+                for (int i = 0; i < 10; ++i)
+                {
+                    MessageBox.Show(i.ToString());
+                }
+                
             }
 
+            private void button7_Click(object sender, EventArgs e)
+            {
+                
+                string s = "1,2,3";
+                clientSocket.Send(Encoding.ASCII.GetBytes(s));    //Encoding.ASCII.GetBytes(sendMessage)   //a,a.Length,SocketFlags.None
+                Console.WriteLine("向服务器发送消息：" + s);
 
-    }
 
+
+            }
+
+            private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+            {
+
+            }
+
+            private void button8_Click(object sender, EventArgs e)
+            {
+                const int c_countOfImagesToGrab = 2;//获取2张图像
+
+                // The exit code of the sample application.
+              //  int exitCode = 0;
+
+
+                // Create a camera object that selects the first camera device found。创建一个相机对象，该对象选择第一个被发现的相机设备。
+                // More constructors are available for selecting a specific camera device.
+
+                using (Camera camera = new Camera())//需要对这种异常检测的用法注意一下。
+                {
+                    // Print the model name of the camera.
+                    Console.WriteLine("Using camera {0}.", camera.CameraInfo[CameraInfoKey.ModelName]);
+
+                    // Set the acquisition mode to free running continuous acquisition when the camera is opened. 将相机设定为获取模式。
+                    camera.CameraOpened += Configuration.AcquireContinuous;//连续取相
+
+                    // Open the connection to the camera device.打开与相机设备的链接
+                    camera.Open();
+
+                    // Enable the chunk mode. 启动块模式、
+
+                    if (!camera.Parameters[PLCamera.ChunkModeActive].TrySetValue(true))
+                    {
+                        throw new Exception("The camera doesn't support chunk features");
+                    }
+
+                    // Enable time stamp chunks.
+                    camera.Parameters[PLCamera.ChunkSelector].SetValue(PLCamera.ChunkSelector.Timestamp);
+                    camera.Parameters[PLCamera.ChunkEnable].SetValue(true);
+
+                    // Enable frame counter chunk if possible. 启动桢数数
+                    if (camera.Parameters[PLCamera.ChunkSelector].TrySetValue(PLCamera.ChunkSelector.Framecounter))
+                    {
+                        camera.Parameters[PLCamera.ChunkEnable].SetValue(true);
+                    }
+                    // Enable generic counters if possible (USB camera devices).
+                    else if (camera.Parameters[PLCamera.ChunkSelector].TrySetValue(PLCamera.ChunkSelector.CounterValue))
+                    {
+                        camera.Parameters[PLCamera.ChunkEnable].SetValue(true);
+                        camera.Parameters[PLCamera.CounterSelector].SetValue(PLCamera.CounterSelector.Counter1);
+                        camera.Parameters[PLCamera.CounterEventSource].SetValue(PLCamera.CounterEventSource.FrameStart);
+                    }
+
+                    // Enable CRC checksum chunks.
+                    camera.Parameters[PLCamera.ChunkSelector].SetValue(PLCamera.ChunkSelector.PayloadCRC16);
+                    camera.Parameters[PLCamera.ChunkEnable].SetValue(true);
+
+
+                    // Start grabbing c_countOfImagesToGrab images.开始获取图像
+                    camera.StreamGrabber.Start(c_countOfImagesToGrab);
+
+                    // camera.StreamGrabber.Stop() is called automatically by the RetrieveResult() method
+                    // when c_countOfImagesToGrab images have been retrieved.
+                    while (camera.StreamGrabber.IsGrabbing)
+                    {
+                        // Wait for an image and then retrieve it. A timeout of 5000 ms is used.
+                        IGrabResult grabResult = camera.StreamGrabber.RetrieveResult(5000, TimeoutHandling.ThrowException);
+                        using (grabResult)
+                        {
+                            // Image grabbed successfully?
+                            if (grabResult.GrabSucceeded)
+                            {
+                                string name = "E:\\实验缓存照片\\my_picture.png";
+                                ImagePersistence.Save(ImageFileFormat.Png, name, grabResult);
+
+
+                                Mat original_picture = CvInvoke.Imread("E:\\实验缓存照片\\my_picture.png", LoadImageType.AnyColor);
+                                string win1 = "original picture";
+                                CvInvoke.NamedWindow(win1, NamedWindowType.Normal);
+                                CvInvoke.Imshow(win1, original_picture);
+
+                                CvInvoke.WaitKey(0);
+                                IntPtr mat = original_picture.Ptr;
+                                CvInvoke.cvReleaseMat(ref mat);
+                                CvInvoke.DestroyWindow(win1);
+
+                                pictureBox1.Load("E:\\实验缓存照片\\my_picture.png");
+
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error: {0} {1}", grabResult.ErrorCode, grabResult.ErrorDescription);
+                                MessageBox.Show("something Wrong :Error: {0} {1}, grabResult.ErrorCode, grabResult.ErrorDescription");
+                            }
+                        }
+                    }
+                    camera.Parameters[PLCamera.ChunkModeActive].SetValue(false);
+                }
+               
+
+
+            }
+
+     }
 }
 
