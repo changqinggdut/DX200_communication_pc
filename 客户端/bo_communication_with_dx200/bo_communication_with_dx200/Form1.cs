@@ -87,9 +87,9 @@ namespace bo_communication_with_dx200
 
                     string RebackData=Encoding.ASCII.GetString(result);
                     MessageBox.Show(RebackData);
-                   // listBox2.Items.Add(RebackData);
+                    
 
-                 
+                    // Encoding.ASCII.GetString(result,0,result.Length);
                 }
                 catch
                 {
@@ -227,10 +227,10 @@ namespace bo_communication_with_dx200
 
             private void button7_Click(object sender, EventArgs e)
             {
-                
-                string s = "1,2,2,9,4,4,1,1,5,5,1,1,8,2,5,2,5,2";
+
+                string s = "112,2,3,4,5,6,1313,2,3,4,5,6,132,2,3,4,5,6";
                 clientSocket.Send(Encoding.ASCII.GetBytes(s));    //Encoding.ASCII.GetBytes(sendMessage)   //a,a.Length,SocketFlags.None
-               // Console.WriteLine("向服务器发送消息：" + s);
+                
 
 
 
@@ -261,11 +261,7 @@ namespace bo_communication_with_dx200
                     camera.CameraOpened += Configuration.AcquireContinuous;//连续取相
 
                     // Open the connection to the camera device.打开与相机设备的链接
-
-
-                     camera.Open();
-                    
-                    
+                    camera.Open();
 
                     // Enable the chunk mode. 启动块模式、
 
@@ -310,38 +306,32 @@ namespace bo_communication_with_dx200
                             // Image grabbed successfully?
                             if (grabResult.GrabSucceeded)
                             {
-
-                                string name = "E:\\实验缓存照片\\" + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".png";
+                                string name = "E:\\实验缓存照片\\my_picture.png";
                                 ImagePersistence.Save(ImageFileFormat.Png, name, grabResult);
 
 
-                                Mat original_picture = CvInvoke.Imread(name, LoadImageType.AnyColor);
+                                Mat original_picture = CvInvoke.Imread("E:\\实验缓存照片\\my_picture.png", LoadImageType.AnyColor);
                                 string win1 = "original picture";
                                 CvInvoke.NamedWindow(win1, NamedWindowType.Normal);
                                 CvInvoke.Imshow(win1, original_picture);
 
                                 CvInvoke.WaitKey(0);
-                                //IntPtr mat = original_picture.Ptr;
-                                //CvInvoke.cvReleaseMat(ref mat);
-                                //CvInvoke.DestroyWindow(win1);
+                                IntPtr mat = original_picture.Ptr;
+                                CvInvoke.cvReleaseMat(ref mat);
+                                CvInvoke.DestroyWindow(win1);
 
-                                pictureBox1.Load(name);
-                            
-                                camera.Close();   //每一次调用完相机后都需要将相机关闭
-                                break;
+                                pictureBox1.Load("E:\\实验缓存照片\\my_picture.png");
 
-                              
 
                             }
                             else
                             {
                                 Console.WriteLine("Error: {0} {1}", grabResult.ErrorCode, grabResult.ErrorDescription);
                                 MessageBox.Show("something Wrong :Error: {0} {1}, grabResult.ErrorCode, grabResult.ErrorDescription");
-                                break;
                             }
                         }
                     }
-                    //camera.Parameters[PLCamera.ChunkModeActive].SetValue(false);
+                    camera.Parameters[PLCamera.ChunkModeActive].SetValue(false);
                 }
                
 

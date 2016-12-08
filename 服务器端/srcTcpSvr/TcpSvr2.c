@@ -183,17 +183,11 @@ int l;
 sprintf(g,"");
 for (i=0;i<3;i++) {
 l = strlen(g);
-if (i<2) sprintf(g+L,"\%d\,",x[i]);
-else sprintf(g+L,"\%d",x[i]);
+if (i<2) sprintf(g+l,"\%d\,",x[i]);
+else sprintf(g+l,"\%d",x[i]);
 };
 /****************************************************/
- while(1)
-            {
-               printf("%s\n",g[0]);
-               printf("%s\n",g[1]);
-               printf("%s\n",g[2]);
-               
-            }
+ 
 return(g);
 }
 
