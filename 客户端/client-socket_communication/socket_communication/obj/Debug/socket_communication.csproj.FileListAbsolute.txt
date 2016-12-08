@@ -47,3 +47,10 @@ C:\Users\Administrator\Desktop\智龙\通信\client-socket_communication\socket_
 C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\bin\Debug\socket_communication.exe.config
 C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\obj\Debug\socket_communication.exe
 C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\obj\Debug\socket_communication.pdb
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\bin\Debug\socket_communication.exe
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\bin\Debug\socket_communication.pdb
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\bin\Debug\ZedGraph.dll
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\bin\Debug\Emgu.CV.UI.xml
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\bin\Debug\Emgu.CV.UI.GL.xml
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\bin\Debug\Emgu.CV.World.xml
+C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\client-socket_communication\socket_communication\obj\Debug\socket_communication.csprojResolveAssemblyReference.cache

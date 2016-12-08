@@ -21,3 +21,8 @@ void mpUsrRoot(int arg1, int arg2, int arg3, int arg4, int arg5,
 	puts("Exit mpUsrRoot!");
 	mpExitUsrRoot;	//(or) mpSuspendSelf;
 }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 通信
