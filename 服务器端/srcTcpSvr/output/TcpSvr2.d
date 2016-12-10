@@ -1,6 +1,6 @@
  \
- C:\Users\Administrator\Desktop\DX200_communication_pc\服务器端\VisionRobot(DX200)\output\motoPlusMove.a:  \
- C:\Users\Administrator\AppData\Local\MotoPlusIDE_DN\ 0\motoPlusMove.c \
+ C:\Users\Administrator\Desktop\DX200_communication_pc\服务器端\srcTcpSvr\output\TcpSvr2.a:  \
+ C:\Users\Administrator\AppData\Local\MotoPlusIDE_DN\ 0\TcpSvr2.c \
   D:\motoplus\mpbuilder\inc/motoPlus.h \
   D:\motoplus\mpbuilder\inc/mpParams.h \
   d:\motoplus\mpbuilder\gnu\4.3.3-vxworks-6.9\x86-win32\bin\../../lib/gcc/i586-wrs-vxworks/4.3.3/include/stddef.h \
@@ -27,7 +27,8 @@
   D:\motoplus\mpbuilder\inc/mpLegApi00.h \
   D:\motoplus\mpbuilder\inc/mpExFileCtrl.h \
   D:\motoplus\mpbuilder\inc/mpWatchDog.h \
-  D:\motoplus\mpbuilder\inc/mpKinema.h
+  D:\motoplus\mpbuilder\inc/mpKinema.h D:\motoplus\mpbuilder\inc/stdio.h \
+  D:\motoplus\mpbuilder\inc/string.h D:\motoplus\mpbuilder\inc/stdlib.h
 
 D:\motoplus\mpbuilder\inc/motoPlus.h:
 
@@ -90,3 +91,9 @@ D:\motoplus\mpbuilder\inc/mpExFileCtrl.h:
 D:\motoplus\mpbuilder\inc/mpWatchDog.h:
 
 D:\motoplus\mpbuilder\inc/mpKinema.h:
+
+D:\motoplus\mpbuilder\inc/stdio.h:
+
+D:\motoplus\mpbuilder\inc/string.h:
+
+D:\motoplus\mpbuilder\inc/stdlib.h:

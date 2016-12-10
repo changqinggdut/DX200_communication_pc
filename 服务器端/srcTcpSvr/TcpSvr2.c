@@ -1,62 +1,55 @@
-﻿//mpMain.c
+﻿/* TcpSvr2.c */
+/* Copyright 2009 YASKAWA ELECTRIC All Rights reserved. */
+
 #include "motoPlus.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-
-// for GLOBAL DATA DEFINITIONS
+// for API & FUNCTIONS
 void moto_plus0_task(void);//子函数的声明
 void ap_TCP_Sserver(ULONG portNo);//子函数的声明
-extern void continuous_move(int MoveData[][6] , int n);
-extern void CalibrateLocation(void);
-
-void location(char*string );
-static int tid1;
 #define PORT        11000 //端口号，
-#define BUFF_MAX    20479
+#define BUFF_MAX    1023
 
+char* result[100];
+int  SetApplicationInfo();
+void mpTask1();
+void moto_plus0_task();
+void ap_TCP_Sserver(ULONG portNo);//子函数的声明
 
 
 
 //GLOBAL DATA DEFINITIONS
+int nTaskID1;
+SEM_ID semid;
+unsigned long serverAddr;
 
+int a;
+int c;
 int b[1000];
 char g[1000];
-int pointSum;
-int d[500][6];
-
-
-void mpUsrRoot(int arg1, int arg2, int arg3, int arg4, int arg5,
-	       int arg6, int arg7, int arg8, int arg9, int arg10)
-{
-	tid1 = mpCreateTask(MP_PRI_TIME_NORMAL, MP_STACK_SIZE, (FUNCPTR)moto_plus0_task,//可以将机器人任务：moto_plus0_task放在另外一个源文件里面。
-			    arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
-	
-	puts("Exit mpUsrRoot!");
-	mpExitUsrRoot;	//(or) mpSuspendSelf;
-}
-
 
 
 void moto_plus0_task(void)
 {
-    
+    puts("Activate moto_plus0_task!");
+
     ap_TCP_Sserver(PORT);
 
     mpSuspendSelf;//通讯程序停止，表示子任务的停止。
 }
 
-
-
+//char *strupr(char *string);
+char* location(char*string );
 
 void ap_TCP_Sserver(ULONG portNo)
 {
-    int     sockHandle;
+   int     sockHandle;
     struct  sockaddr_in     serverSockAddr;
     int     rc;
 
-    
+    printf("Simple TCP server\n");
 
     sockHandle = mpSocket(AF_INET, SOCK_STREAM, 0);//创建socket,这里需要注意三个参数：第一个参数只有一种值，AF_INET表示使用ipv4通信簇， 确定通信类型：tcp或者tdp，该函数会输出一个新建的socket的描述符。
     if (sockHandle < 0)//如果socket创建失败，进行返回
@@ -90,51 +83,29 @@ void ap_TCP_Sserver(ULONG portNo)
         if (acceptHandle < 0)
             break;
 
-       /*------------------------------主程序入口-------------------------------*/
-        while(1)   
+        while(1)
         {
             int     bytesRecv;
+            int     bytesSend;
             char    buff[(int)BUFF_MAX + 1];
 
             memset(buff, 0, sizeof(buff));
 
-            bytesRecv = mpRecv(acceptHandle, buff, (int)BUFF_MAX, 0);//从socket中提取字符,当返回值bytesRecv >=0时为接收正常 =-1为接收异常
+            bytesRecv = mpRecv(acceptHandle, buff, (int)BUFF_MAX, 0);//从socket中提取字符
 
             if (bytesRecv < 0)
                 break;
-                
-              int stenghtBuff =strlen (buff);//测量buff字节长度
-              int buffConvernInt=atoi(buff);//将char型buff转换为整形
-              if(stenghtBuff<3)        //  用两位以内的数存接收命令
-              {
-              
-                switch(buffConvernInt)
-                {
-                case 1:
-                       memset(buff, 0, sizeof(buff));
-                       bytesRecv= -1;
-                       
-                       
-                      while (bytesRecv < 0)
-                     {
-                       bytesRecv = mpRecv(acceptHandle, buff, (int)BUFF_MAX, 0);  //接收坐标形如12,34,56,78.....样式的一系列字符串
-                       location(buff); //将接收到的字符串转成二维数组d[][6]
-                       
-                       continuous_move(d,pointSum);//调用子程序motoplusMove里的continuous_move运动程序
-                     }
-                 break;
-                 
-                 case 2:
-                         CalibrateLocation();//调用子程序CalibrateLocation里的CalibrateLocation运动程序
-                       
-                   
-                 break;
-                   
-                }
-             }
-               
-           
 
+            /* 受信データを大文字に変換して送り返す */
+            location(buff);
+            
+            bytesSend = mpSend(acceptHandle, g, bytesRecv, 0);//向socket写入信息
+
+            if (bytesSend != bytesRecv)
+                break;
+
+            if (strncmp(buff, "EXIT", 4) == 0 || strncmp(buff, "exit", 4) == 0)
+                break;
         }
         mpClose(acceptHandle);//关闭socket
     }
@@ -144,11 +115,30 @@ closeSockHandle:
     return;
 }
 
+char *strupr(char *string)//对字符实现转化，将小写字母转化成大写字母。
+{
+    int		i;
+    int     len;
+
+    len = strlen(string);
+	for (i=0; i < len; i++)
+	{
+	    if (isalpha((unsigned char)string[i]))
+	    {
+		    string[i] = toupper(string[i]);
+        }
+	}
+    return (string);
+}
 
 
-void location(char*string ){
 
-/****************将buff里的字符串通过逗号分开转成整形数组**************/
+
+
+
+char *location(char*string ){
+
+/****************将buff转成整形数组**************/
 int i=0;
 int j;
 char * p;
@@ -160,18 +150,16 @@ while(p!=NULL)
 {
    b[i]= atoi(p);
    printf ("%d\n",b[i]);
-   ++i;
+   i++;
    p = strtok(NULL,split);
-  
+
 }
-
- pointSum=(i/6);//运动总点数
-
 /****************将一维数组转成二维数组**************/
 
-
+int L=sizeof(b)/24;
+int d[L][6];
 int k=0;
-for(  i=0; i<pointSum ; ++i )
+for(  i=0; i<L ; ++i )
 
 {
 
@@ -186,7 +174,21 @@ for(  i=0; i<pointSum ; ++i )
     }
 
 }
+int x[3]={d[0][0],d[1][0],d[2][0]};
 
+
+/****************将整形数组转成字符串**************/
+
+int l;
+sprintf(g,"");
+for (i=0;i<3;i++) {
+l = strlen(g);
+if (i<2) sprintf(g+l,"\%d\,",x[i]);
+else sprintf(g+l,"\%d",x[i]);
+};
+/****************************************************/
+ 
+return(g);
 }
 
 

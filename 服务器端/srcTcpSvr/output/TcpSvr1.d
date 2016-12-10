@@ -1,6 +1,6 @@
  \
- C:\Users\Administrator\Desktop\DX200_communication_pc\服务器端\VisionRobot(DX200)\output\motoPlusMove.a:  \
- C:\Users\Administrator\AppData\Local\MotoPlusIDE_DN\ 0\motoPlusMove.c \
+ C:\Users\Administrator\Desktop\DX200_communication_pc\服务器端\srcTcpSvr\output\TcpSvr1.a:  \
+ C:\Users\Administrator\AppData\Local\MotoPlusIDE_DN\ 0\TcpSvr1.c \
   D:\motoplus\mpbuilder\inc/motoPlus.h \
   D:\motoplus\mpbuilder\inc/mpParams.h \
   d:\motoplus\mpbuilder\gnu\4.3.3-vxworks-6.9\x86-win32\bin\../../lib/gcc/i586-wrs-vxworks/4.3.3/include/stddef.h \

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -31,6 +30,11 @@ namespace bo_communication_with_dx200
          static byte[] result = new byte[1024];
          public string[,] EnterCoordination=new string[100,6];
          int NumofEnterCoordinationPoint=0;
+         int PicturePoint = 0;
+         string PictureAddress="";
+         string PictureProcessedAddress = "";
+         string M;
+
 
          IPAddress ip = IPAddress.Parse("192.168.255.1");
          int port = 11000;
@@ -56,7 +60,7 @@ namespace bo_communication_with_dx200
                 try
                 {
                     clientSocket.Connect(new IPEndPoint(ip, port)); //配置服务器IP与端口
-                    Console.WriteLine("连接服务器成功");
+                    
                     button1.BackColor=Color.Green;
 
                     Thread th = new Thread(recMsg);//新建后台接受信息线程。
@@ -67,7 +71,7 @@ namespace bo_communication_with_dx200
                 }
                 catch
                 {
-                    Console.WriteLine("连接服务器失败，请按回车键退出！");
+                    
                     button1.BackColor = Color.Red;
                     return;
                 }
@@ -85,11 +89,8 @@ namespace bo_communication_with_dx200
                     int num=clientSocket.Receive(result);
                     //Console.WriteLine("接收服务器消息：{0}", Encoding.ASCII.GetString(result));
 
-                    string RebackData=Encoding.ASCII.GetString(result);
-                    MessageBox.Show(RebackData);
-                    
-
-                    // Encoding.ASCII.GetString(result,0,result.Length);
+                   string RebackData=Encoding.ASCII.GetString(result);
+                   
                 }
                 catch
                 {
@@ -210,26 +211,19 @@ namespace bo_communication_with_dx200
 
             private void button3_Click(object sender, EventArgs e)
             {
-
-                for (int i = 0; i < 10; i++)
-                {
-                    /* code */
-                    MessageBox.Show(i.ToString());
-                }
-
-
-                for (int i = 0; i < 10; ++i)
-                {
-                    MessageBox.Show(i.ToString());
-                }
-                
+                string s = "2";
+                clientSocket.Send(Encoding.ASCII.GetBytes(s));    //Encoding.ASCII.GetBytes(sendMessage)   //a,a.Length,SocketFlags.None
+              
             }
 
             private void button7_Click(object sender, EventArgs e)
             {
-
-                string s = "112,2,3,4,5,6,1313,2,3,4,5,6,132,2,3,4,5,6";
+                string s = "1";
                 clientSocket.Send(Encoding.ASCII.GetBytes(s));    //Encoding.ASCII.GetBytes(sendMessage)   //a,a.Length,SocketFlags.None
+
+                Thread.Sleep(1000);
+                //string s = "923857, -38221, -209181, -1789992, -315122, 65610,1074305, -35249, -209211, -1789986, -315089, 65617";
+                clientSocket.Send(Encoding.ASCII.GetBytes(M));    //Encoding.ASCII.GetBytes(sendMessage)   //a,a.Length,SocketFlags.None
                 
 
 
@@ -297,8 +291,7 @@ namespace bo_communication_with_dx200
 
                     // camera.StreamGrabber.Stop() is called automatically by the RetrieveResult() method
                     // when c_countOfImagesToGrab images have been retrieved.
-                    while (camera.StreamGrabber.IsGrabbing)
-                    {
+                   
                         // Wait for an image and then retrieve it. A timeout of 5000 ms is used.
                         IGrabResult grabResult = camera.StreamGrabber.RetrieveResult(5000, TimeoutHandling.ThrowException);
                         using (grabResult)
@@ -306,21 +299,25 @@ namespace bo_communication_with_dx200
                             // Image grabbed successfully?
                             if (grabResult.GrabSucceeded)
                             {
-                                string name = "E:\\实验缓存照片\\my_picture.png";
-                                ImagePersistence.Save(ImageFileFormat.Png, name, grabResult);
+                                PictureAddress = "E:\\实验缓存照片\\" + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".png";
+                                PictureProcessedAddress = "E:\\实验缓存照片\\" + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + "(Processed).png";
+                               
+                                ImagePersistence.Save(ImageFileFormat.Png, PictureAddress, grabResult);
 
 
-                                Mat original_picture = CvInvoke.Imread("E:\\实验缓存照片\\my_picture.png", LoadImageType.AnyColor);
-                                string win1 = "original picture";
-                                CvInvoke.NamedWindow(win1, NamedWindowType.Normal);
-                                CvInvoke.Imshow(win1, original_picture);
+                                //Mat original_picture = CvInvoke.Imread(PictureAddress, LoadImageType.AnyColor);
+                                //string win1 = "original picture";
+                                //CvInvoke.NamedWindow(win1, NamedWindowType.Normal);
+                                //CvInvoke.Imshow(win1, original_picture);
 
-                                CvInvoke.WaitKey(0);
-                                IntPtr mat = original_picture.Ptr;
-                                CvInvoke.cvReleaseMat(ref mat);
-                                CvInvoke.DestroyWindow(win1);
+                                //CvInvoke.WaitKey(0);
+                                //IntPtr mat = original_picture.Ptr;
+                                //CvInvoke.cvReleaseMat(ref mat);
+                                //CvInvoke.DestroyWindow(win1);
 
-                                pictureBox1.Load("E:\\实验缓存照片\\my_picture.png");
+                                pictureBox1.Load(PictureAddress);
+                                pictureBox2.Load(PictureAddress);
+                                camera.Close();
 
 
                             }
@@ -330,12 +327,118 @@ namespace bo_communication_with_dx200
                                 MessageBox.Show("something Wrong :Error: {0} {1}, grabResult.ErrorCode, grabResult.ErrorDescription");
                             }
                         }
-                    }
-                    camera.Parameters[PLCamera.ChunkModeActive].SetValue(false);
+                  
+                    
                 }
                
 
 
+            }
+
+            private void pictureBox2_Click(object sender, EventArgs e)
+            
+        {
+        
+         }
+
+            private void button9_Click(object sender, EventArgs e)
+            {
+
+                Image<Bgr, byte> scr = new Image<Bgr, byte>(PictureAddress);
+                //指定目录创建一张图片。
+
+                Image<Gray, byte> scr1 = new Image<Gray, byte>(scr.Width, scr.Height);
+                Image<Gray, byte> scr2 = new Image<Gray, byte>(scr.Width, scr.Height);
+                CvInvoke.CvtColor(scr, scr1, Emgu.CV.CvEnum.ColorConversion.Bgr2Gray);
+                //图像类型转换，bgr 转成 gray 类型。
+                CvInvoke.Threshold(scr1, scr2, 100, 255, Emgu.CV.CvEnum.ThresholdType.Binary);
+                //对图像进行二值化操作。
+              scr2.Save(PictureProcessedAddress);
+              pictureBox3.Load(PictureProcessedAddress);
+                
+
+                byte[, ,] pixel = new byte[scr2.Cols, scr2.Rows, 0];          
+                pixel = scr2.Data;
+
+                CoordinationTransformation coordinationTransformation = new CoordinationTransformation();
+
+                int temp1 = 0;
+                string[] p1 = new string[1500];
+                //Point L=new Point();
+
+                int j = 0;
+                int k = 0;
+                int[] TransformResult = new int[2];
+
+                do
+                {
+                    for (int i = 0; i < scr2.Cols - 20; i++)
+                    {
+                        if (pixel[j, i, 0] == 0)
+                        {
+                           TransformResult= coordinationTransformation.sub((double)i, (double)j);
+                           p1[k] = TransformResult[0].ToString();
+                           p1[k + 1] = TransformResult[1].ToString();
+                           p1[k + 2] = (-228878).ToString();
+                            p1[k + 3] = (-1789992).ToString();
+                            p1[k + 4] = (-315122).ToString();
+                            p1[k + 5] = (65610).ToString();
+                            k = k + 6;
+                          //  L.X = i; L.Y = j;
+                        //    CvInvoke.Circle(scr2, L, 1, new MCvScalar(0, 0, 255, 255), 10, LineType.EightConnected);
+
+                            listBox3.Items.Add("第" + (k / 6 + 1).ToString() + "个点的X,Y坐标：" + "\t\t" + TransformResult[0].ToString() + "\t\t" + TransformResult[1].ToString());
+
+                            break;
+                        }
+
+                        else temp1++;
+                    }
+                    j = j + 10;//每20行检测一次，看是否有轨迹点
+                }
+                while (j < scr2.Rows - 20);
+
+                
+                M = string.Join(",", p1);
+        
+                //CvInvoke.WaitKey(0);
+
+            }
+
+            private void pictureBox3_Click(object sender, EventArgs e)
+            {
+                         
+            }
+
+            private void pictureBox1_Click(object sender, EventArgs e)
+            {
+
+            }
+
+            private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
+            {
+                
+            }
+
+            private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+            {
+
+            }
+
+            private void button10_Click(object sender, EventArgs e)
+            {
+                string s = "1";
+                clientSocket.Send(Encoding.ASCII.GetBytes(s));    //Encoding.ASCII.GetBytes(sendMessage)   //a,a.Length,SocketFlags.None
+            }
+
+            private void button10_Click_1(object sender, EventArgs e)
+            {
+                string s = "1";
+                clientSocket.Send(Encoding.ASCII.GetBytes(s));    //Encoding.ASCII.GetBytes(sendMessage)   //a,a.Length,SocketFlags.None
+
+                Thread.Sleep(1000);
+                //string s = "923857, -38221, -209181, -1789992, -315122, 65610,1074305, -35249, -209211, -1789986, -315089, 65617";
+                clientSocket.Send(Encoding.ASCII.GetBytes(M));    //Encoding.ASCII.GetBytes(sendMessage)   //a,a.Length,SocketFlags.None
             }
 
      }
