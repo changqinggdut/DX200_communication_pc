@@ -19,7 +19,7 @@ namespace bo_communication_with_dx200
     {
         public int[] sub(double x1, double y1)
         {
-            double a = -1.3184;double b = 3.1416;double c=-3.0828;
+            double a = -1.3184;double b = 3.1416;double c=-3.0828;//需要增加注释
             int[] result = new int[2];
             double x0 = 0; double y0 = 0; double z0 = -228878;
 

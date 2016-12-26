@@ -18,3 +18,6 @@ C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\bo_communication
 C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\bo_communication_with_dx200\bo_communication_with_dx200\bin\Debug\Emgu.CV.UI.xml
 C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\bo_communication_with_dx200\bo_communication_with_dx200\bin\Debug\Emgu.CV.UI.GL.xml
 C:\Users\Administrator\Desktop\DX200_communication_pc\客户端\bo_communication_with_dx200\bo_communication_with_dx200\bin\Debug\Emgu.CV.World.xml
+C:\Users\Administrator\DX200_communication_pc\客户端\bo_communication_with_dx200\bo_communication_with_dx200\bin\Debug\bo_communication_with_dx200.exe.config
+C:\Users\Administrator\DX200_communication_pc\客户端\bo_communication_with_dx200\bo_communication_with_dx200\obj\Debug\bo_communication_with_dx200.exe
+C:\Users\Administrator\DX200_communication_pc\客户端\bo_communication_with_dx200\bo_communication_with_dx200\obj\Debug\bo_communication_with_dx200.pdb
