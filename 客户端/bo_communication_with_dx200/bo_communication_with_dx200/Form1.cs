@@ -353,23 +353,23 @@ namespace bo_communication_with_dx200
                 //图像类型转换，bgr 转成 gray 类型。
                 CvInvoke.Threshold(scr1, scr2, 100, 255, Emgu.CV.CvEnum.ThresholdType.Binary);
                 //对图像进行二值化操作。
-              scr2.Save(PictureProcessedAddress);
-              pictureBox3.Load(PictureProcessedAddress);
+              scr2.Save(PictureProcessedAddress);//将二值化之后的图片先存储在本地
+              pictureBox3.Load(PictureProcessedAddress);//将上步存储的图片加载到显示框中
                 
 
-                byte[, ,] pixel = new byte[scr2.Cols, scr2.Rows, 0];          
+                byte[, ,] pixel = new byte[scr2.Cols, scr2.Rows, 0];  // 创建一个和图像大小一样的三维数组，进行判断像素点  
                 pixel = scr2.Data;
 
                 CoordinationTransformation coordinationTransformation = new CoordinationTransformation();
 
                 int temp1 = 0;
-                string[] p1 = new string[1500];
+                string[] p1 = new string[1500];//存储将6个方向的数值转换为字符之后的字符
                 //Point L=new Point();
 
                 int j = 0;
                 int k = 0;
-                int[] TransformResult = new int[2];
-
+                int[] TransformResult = new int[2];//存储坐标转换之后的x和y值
+                //下面的循环是按照行扫描的方式找出像素点的位置
                 do
                 {
                     for (int i = 0; i < scr2.Cols - 20; i++)
@@ -377,7 +377,7 @@ namespace bo_communication_with_dx200
                         if (pixel[j, i, 0] == 0)
                         {
                            TransformResult= coordinationTransformation.sub((double)i, (double)j);
-                           p1[k] = TransformResult[0].ToString();
+                           p1[k] = TransformResult[0].ToString();//为了通信，将坐标值转换为字符
                            p1[k + 1] = TransformResult[1].ToString();
                            p1[k + 2] = (-228878).ToString();
                             p1[k + 3] = (-1789992).ToString();
@@ -399,7 +399,7 @@ namespace bo_communication_with_dx200
                 while (j < scr2.Rows - 20);
 
                 
-                M = string.Join(",", p1);
+                M = string.Join(",", p1);//将转换的字符按照每6个字符作为字符串分开
         
                 //CvInvoke.WaitKey(0);
 
